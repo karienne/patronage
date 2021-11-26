@@ -1,0 +1,185 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+header{
+    background-image: url('https://www.hotmag.pl/media/141MAJ/Pizza/_slider.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    height: 200px;
+    position: relative;
+}
+
+.header-text{
+    font-family: 'Estonia', cursive;
+    color: white;
+    text-align: center;
+    font-size: 150px;
+    text-shadow: 8px 8px 15px black;
+}
+
+.container{
+    width: 100%;
+    display: flex;
+    /*justify-content: center;*/
+    margin-top: 50px;
+    padding-bottom: 50px;
+    background-color: #B71C1C;
+}
+
+.column1{
+    background-color: #EFEBE9;
+    margin-left: 50px;
+    padding-top: 30px;
+    width: 68%;
+}
+
+.products-list{
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.menu-text{
+    margin-bottom: 30px;
+    margin-left: 80px;
+    margin-right: 80px;
+    font-family: 'Estonia', cursive;
+    font-size: 70px;
+    border-bottom: 1px solid black;
+}
+
+.product{
+    background-color: #D7CCC8;
+    margin: 25px;
+    position: relative;
+    overflow: hidden;
+    width: 250px;
+    /* border-radius: 15px; */
+    border-top-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+}
+
+.product-image{
+    width: 250px;
+    height: 250px;
+}
+
+.title-product{
+    font-size: 40px;
+    font-family: 'Estonia', cursive;
+    margin-left: 10px;
+}
+
+.price-product{
+    margin-left: 10px;
+}
+
+.ingredients-product{
+    font-size: 16px;
+    display: flex;
+    font-family: 'Dosis', sans-serif;
+    padding-bottom: 15px;
+    margin-left: 10px;
+}
+
+.add-cart{
+    position: absolute;
+    width: 100%;
+    max-width: 250px;
+    background-color: #C62828;
+    color: white;
+    transition: all 0.3s ease-in-out;
+    opacity: 0;
+    cursor: pointer;
+    text-align: center;
+    font-size: 18px;
+}
+
+.product:hover .cart-button{
+    top: 210px;
+    opacity: 1;
+    padding: 10px;
+    text-decoration: none;
+}
+
+
+/* ------------------------ CART ------------------------ */
+
+.column2{
+    width: 25%;
+    height: 400px;
+    background-color: #D7CCC8;
+    position: fixed;
+    overflow-y: scroll;
+    top: 20;
+    right: 0;
+    margin-right: 30px;
+    border-radius: 15px;
+}
+
+.cart-text{
+    margin: 20px;
+    font-size: 48px;
+    font-family: 'Estonia', cursive;
+}
+
+.empty-cart{
+    font-size: 25px;
+    margin: 20px;
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+
+.total-price{
+    display: flex;
+    margin: 27px;
+    margin-top: 29px;
+    font-size: 20px;
+    margin-bottom: 25px;
+    border-bottom: 1px solid black;
+}
+
+.total-price-title{
+    display: flex;
+    width: 56%;
+}
+
+.cart-product{
+    display: flex;
+    margin: 20px;
+    margin-left: 27px;
+    font-size: 20px;
+}
+
+.cart-product-title{
+    display: flex;
+    width: 45%;
+    font-size: 20px;
+}
+
+.cart-product-price{
+    display: flex;
+    text-align: center;
+    width: 20%;
+    font-size: 20px;
+}
+
+.cart-product-amount{
+    display: flex;
+    text-align: center;
+    width: 18%;
+    font-size: 20px;
+}
+
+.remove-cart{
+    display: flex;
+    text-align: center;
+    cursor: pointer;
+    font-size: 20px;
+    color: #C62828;
+
+}
