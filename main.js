@@ -1,7 +1,6 @@
-url = 'https://raw.githubusercontent.com/alexsimkovich/patronage/main/api/data.json';
+const url = 'https://raw.githubusercontent.com/alexsimkovich/patronage/main/api/data.json';
 
 let inCartItems = 0; //ile jest produktów w koszyku
-let productsInCart = []; //tablica do zapisywania ile jest danego produktu w koszyku
 let totalCost = 0; //koszt całkowity zamówienia
 
 
@@ -17,59 +16,29 @@ fetch(url)
     });
 
 
-function appendData(data){ //załadowanie danych na stronie
-
-    let column1 = document.getElementById("col1");
-    let div;
-    let img;
-    let title;
-    let price;
-    let ingredients;
-    let button;
-
-    for(let i = 0; i < data.length; i++){
-
-        productsInCart.push({"inCart": 0});
-
-        div = document.createElement("div");
-        div.classList.add('product');
-
-        img = document.createElement('img');
-        img.src = data[i].image;
-        img.classList.add('product-image');
-        div.appendChild(img);
-
-        title = document.createElement("h3");
-        title.classList.add('title-product');
-        title.innerHTML = data[i].title;
-        div.appendChild(title);
-
-        price = document.createElement("h3");
-        price.classList.add('price-product');
-        price.innerHTML = data[i].price.toFixed(2); 
-        div.appendChild(price);
-
-        ingredients = document.createElement("h3");
-        ingredients.classList.add('ingredients-product');
-        ingredients.innerHTML = data[i].ingredients.join(", ");
-        div.appendChild(ingredients);
-
-        button = document.createElement("a");
-        button.classList.add('add-cart', 'cart-button');
-        button.innerHTML = "Zamów";
+function appendData(data) {
+    const pizzasList = document.getElementById("pizzas-list");
+    
+    data.forEach(item => {
+        item.counter = 0;
+        pizzasList.insertAdjacentHTML('beforeend', `
+            <div class='product'>
+            <img src='${item.image}' class='product-image' />
+            <h3 class='title-product'>${item.title}</h3>
+            <h3 class='price-product'>${item.price.toFixed(2)}</h3>
+            <h3 class='ingredients-product'>${item.ingredients.join(', ')}</h3>
+            <a class='add-cart cart-button' id='product` + item.id + `'>Zamów</a>
+            </div>
+            `)
+        const button = document.getElementById("product" + item.id);
         button.addEventListener('click', () => {
-            addToCart(data[i]);
+            addToCart(item);
         })
-        
-        div.appendChild(button);
-        column1.appendChild(div);
-
-    }
-
+    
+    })
 }
 
 function addToCart(product){ //funkcja, która wykonuje się po kliknięciu przycisku zamów
-
     inCartItems++;
     checkCart();
     addTotalCost(product);
@@ -77,18 +46,13 @@ function addToCart(product){ //funkcja, która wykonuje się po kliknięciu przy
 }
 
 function checkCart(){ //sprawdzanie czy koszyk jest pusty
-    let cart = document.getElementById("col2");
-    let emptyCart = document.getElementById("emptyCart");
+    const emptyCart = document.getElementById("emptyCart");
     
-    if(inCartItems != 0 && emptyCart){
-        cart.removeChild(emptyCart);
+    if(inCartItems != 0){
+        emptyCart.className="full-cart";
     }
-    else if(inCartItems == 0 && !emptyCart){
-        emptyCart = document.createElement("h3");
-        emptyCart.id = "emptyCart";
-        emptyCart.classList.add('empty-cart');
-        emptyCart.innerHTML = "Głodny? Zamów naszą pizzę!"
-        cart.appendChild(emptyCart);
+    else if(inCartItems == 0){
+        emptyCart.className="empty-cart";
     }
 }
 
@@ -97,103 +61,73 @@ function addTotalCost(product){
 }
 
 function setItemInCart(product){ //umieszczenie produktu w koszyku
-    let cart = document.getElementById("col2");
-    let index = product.id - 1;
-    let total = document.getElementById("tp"); //koszt zamówienia
+    const cart = document.getElementById("cart");
+    const index = product.id - 1;
+    const total = document.getElementById("costs"); //koszt zamówienia
 
     if(!total){
-        total = document.createElement("div");
-        total.classList.add('total-price');
-        total.id = "tp";
-
-        let totalPriceTitle = document.createElement("h4");
-        totalPriceTitle.classList.add('total-price-title');
-        totalPriceTitle.innerHTML = "Koszt zamówienia: ";
-
-        total.appendChild(totalPriceTitle);
-
-        let totalPrice = document.createElement("h4");
-        totalPrice.classList.add('total-price-number');
-        totalPrice.id = "tpn";
-        totalPrice.innerHTML = totalCost.toFixed(2);
-
-        total.appendChild(totalPrice);
-        cart.appendChild(total);
+        cart.insertAdjacentHTML('beforeend', `
+        <div class='total-price' id='costs'>
+        <h4 class='total-price-title'>Koszt zamówienia: </h4>
+        <h4 class='total-price-number' id='costs-number'>${totalCost.toFixed(2)}</h4>
+        </div>
+        `)
     }
 
-    if (productsInCart[index].inCart == 0){
-
-        let sum = document.getElementById("tpn");
+    if (product.counter === 0){
+        const sum = document.getElementById("costs-number");
         sum.innerHTML = totalCost.toFixed(2);
 
-        productsInCart[index].inCart += 1; //zwiększanie liczby danego elementu w koszyku
+        product.counter += 1; //zwiększanie liczby danego elementu w koszyku
 
-        let div = document.createElement("div");
-        div.classList.add('cart-product');
-        div.id = product.id;
+        cart.insertAdjacentHTML('beforeend',`
+        <div class='cart-product' id='${product.id}'>
+        <h5 class='cart-product-title'>${product.title}</h5>
+        <h5 class='cart-product-price'>${product.price.toFixed(2)}</h5>
+        <h5 class='cart-product-amount' id='amount${product.id}'>x${product.counter}</h5>
+        <a class='remove-cart' id="remove${product.id}">Usuń</button>
+        </div>`)
 
-        let title = document.createElement("h5");
-        title.classList.add('cart-product-title');
-        title.innerHTML = product.title;
-        div.appendChild(title);
-
-        let price = document.createElement("h5");
-        price.classList.add('cart-product-price');
-        price.innerHTML = product.price.toFixed(2);
-        div.appendChild(price);
-
-        let amount = document.createElement("h5");
-        amount.classList.add('cart-product-amount');
-        amount.id = "amount" + product.id;
-        amount.innerHTML = "x" + productsInCart[index].inCart;
-        div.appendChild(amount);
-
-        removeButton = document.createElement("a");
-        removeButton.classList.add('remove-cart');
-        removeButton.innerHTML = "Usuń";
+        const removeButton = document.getElementById("remove" + product.id);
         removeButton.addEventListener('click', () => {
             removeFromCart(product);
         }) 
-        div.appendChild(removeButton);
-        cart.appendChild(div);
 
     }
     else{
-        let sum = document.getElementById("tpn");
+        const sum = document.getElementById("costs-number");
         sum.innerHTML = totalCost.toFixed(2);
-        productsInCart[index].inCart += 1; 
-        let amount = document.getElementById("amount" + product.id);
-        amount.innerHTML = "x" + productsInCart[index].inCart;
+        product.counter += 1; 
+        const amount = document.getElementById("amount" + product.id);
+        amount.innerHTML = "x" + product.counter;
     }
 }
 
 function removeFromCart(product){ //usuwanie produktu z koszyka
-
     subtractTotalCost(product);
-    let cart = document.getElementById("col2");
-    let index = product.id - 1;
+    const cart = document.getElementById("cart");
     inCartItems--;
-    let total = document.getElementById("tp"); 
+    const total = document.getElementById("costs"); 
 
     if(total && inCartItems == 0){
         cart.removeChild(total);
     }
 
-    if(productsInCart[index].inCart == 1){
-        productsInCart[index].inCart -= 1;
+    if(product.counter === 1){
+        product.counter -= 1;
         cart.removeChild(document.getElementById(product.id));
-        let sum = document.getElementById("tpn");
+        const sum = document.getElementById("costs-number");
         if(sum){
             sum.innerHTML = totalCost.toFixed(2);
         }
 
     }
     else{
-        let sum = document.getElementById("tpn");
+        const sum = document.getElementById("costs-number");
         sum.innerHTML = totalCost.toFixed(2);
-        productsInCart[index].inCart -= 1;
-        let amount = document.getElementById("amount" + product.id);
-        amount.innerHTML = "x" + productsInCart[index].inCart;
+        product.counter -= 1;
+        const amount = document.getElementById("amount" + product.id);
+        amount.innerHTML = "x" + product.counter;
     }
     checkCart();
 }
